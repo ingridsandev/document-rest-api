@@ -1,0 +1,3 @@
+dotnet restore
+dotnet lambda package --configuration release --framework netcoreapp2.1 --output-package bin/release/netcoreapp2.1/DocumentRestApi.zip
+sls deploy -v
