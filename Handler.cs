@@ -5,8 +5,6 @@ using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -71,13 +69,9 @@ namespace AwsDotnetCsharp
         {
             Console.WriteLine("request: " + JsonConvert.SerializeObject(request));
 
-            // Convert body string to Document
-            var document = JsonConvert.DeserializeObject<Document>(request.Body);
+            request.PathParameters.TryGetValue("id", out string id);
 
-            Console.WriteLine("document: " + JsonConvert.SerializeObject(document));
-
-            var filter = Builders<Document>.Filter.And(
-                Builders<Document>.Filter.Eq(n => n.Id, document.Id));
+            var filter = Builders<Document>.Filter.Eq(n => n.Id, ObjectId.Parse(id));
 
             var response = await collection.FindOneAndDeleteAsync(filter);
             return new APIGatewayProxyResponse()
